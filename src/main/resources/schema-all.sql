@@ -1,17 +1,18 @@
 DROP TABLE people IF EXISTS;
-DROP TABLE employee IF EXISTS;
+DROP TABLE musician IF EXISTS;
 
 
 CREATE TABLE people  (
-    person_id BIGINT IDENTITY NOT NULL PRIMARY KEY,
-    first_name VARCHAR(20),
-    last_name VARCHAR(20)
-);
-
-CREATE TABLE employee  (
-    employee_id BIGINT IDENTITY NOT NULL PRIMARY KEY,
+    people_id BIGINT IDENTITY NOT NULL PRIMARY KEY, 
     first_name VARCHAR(20),
     last_name VARCHAR(20),
+    age INTEGER
+);
+
+CREATE TABLE musician  (
+    musician_id BIGINT IDENTITY NOT NULL PRIMARY KEY,
+    first_name VARCHAR(20),
+    last_name VARCHAR(20),
+    age INTEGER,
     role VARCHAR(20),
-    salary BIGINT
 );

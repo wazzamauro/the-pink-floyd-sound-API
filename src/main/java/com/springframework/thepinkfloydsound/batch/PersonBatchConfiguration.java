@@ -28,60 +28,46 @@ public class PersonBatchConfiguration {
 
 	@Autowired
 	public JobBuilderFactory jobBuilderFactory;
-	
+
 	@Autowired
 	public StepBuilderFactory stepBuilderFactory;
-	
+
 	@Autowired
 	public DataSource dataSource;
-	
+
 	@Bean
-	public FlatFileItemReader<Person> personReaderCSV(){
-		return new FlatFileItemReaderBuilder<Person>()
-				.name("personReaderCSV")
-				.resource(new ClassPathResource("person.csv"))
-				.delimited()
-				.names(new String[] {"firstName", "lastName", "age"})
-				.linesToSkip(1)
+	public FlatFileItemReader<Person> personReaderCSV() {
+		return new FlatFileItemReaderBuilder<Person>().name("personReaderCSV")
+				.resource(new ClassPathResource("person.csv")).delimited()
+				.names(new String[] { "firstName", "lastName", "age" }).linesToSkip(1)
 				.fieldSetMapper(new BeanWrapperFieldSetMapper<Person>() {
 					{
 						setTargetType(Person.class);
-
 					}
 				}).build();
 	}
-	
+
 	@Bean
 	public PersonItemProcessor personProcessor() {
 		return new PersonItemProcessor();
 	}
-	
+
 	@Bean
-	public JdbcBatchItemWriter<Person> writerPerson(DataSource dataSource){
+	public JdbcBatchItemWriter<Person> writerPerson(DataSource dataSource) {
 		return new JdbcBatchItemWriterBuilder<Person>()
-				.itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Person>())
-				.sql("INSERT INTO person (first_name, last_name, age) VALUES (:firstName, :lastName, :age)")
-				.dataSource(dataSource)
-				.build();		
+				.itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
+				.sql("INSERT INTO people (people_id, first_name, last_name, age) VALUES (:id, :firstName, :lastName, :age)")
+				.dataSource(dataSource).build();
 	}
-	
+
 	@Bean
 	public Step stepPerson(JdbcBatchItemWriter<Person> writerPerson) {
-		return stepBuilderFactory
-				.get("stepPerson")
-				.<Person,Person>chunk(10)
-				.reader(personReaderCSV())
-				.processor(personProcessor())
-				.writer(writerPerson)
-				.build();
+		return stepBuilderFactory.get("stepPerson").<Person, Person>chunk(10).reader(personReaderCSV())
+				.processor(personProcessor()).writer(writerPerson).build();
 	}
-		
+
 	@Bean
 	public Job importPerson(Step stepPerson) {
-		return jobBuilderFactory.get("importPerson")
-				.incrementer(new RunIdIncrementer())
-				.flow(stepPerson)
-				.end()
-				.build();
+		return jobBuilderFactory.get("importPerson").incrementer(new RunIdIncrementer()).flow(stepPerson).end().build();
 	}
 }

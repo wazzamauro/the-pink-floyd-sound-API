@@ -2,8 +2,6 @@ package com.springframework.thepinkfloydsound.controller;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
@@ -13,30 +11,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.springframework.thepinkfloydsound.entity.Person;
-import com.springframework.thepinkfloydsound.service.PersonService;
+import com.springframework.thepinkfloydsound.entity.Musician;
+import com.springframework.thepinkfloydsound.service.MusicianService;
 
 @RestController
-@RequestMapping("/api/person")
-public class PersonController {
-	
-	public Logger Log = LoggerFactory.getLogger(PersonController.class);
-
+@RequestMapping("/api/musician")
+public class MusicianController {
 	@Autowired
-	private PersonService personService;
+	private MusicianService musicianService;
 
 	@RequestMapping("/import")
 	public void imortPersonService() throws JobExecutionAlreadyRunningException, JobRestartException,
 			JobInstanceAlreadyCompleteException, JobParametersInvalidException {
-		Log.info("Importing person from CSV file. . . ");
-		personService.importPerson();
-		Log.info("Import finished.");
-
+		musicianService.importMusician();
 	}
-	
+
 	@GetMapping("/get")
-	public List<Person> getPeople() {
-		Log.info("Retrieve People from db. . .");
-		return personService.getAllPerson();
+	public List<Musician> getMusicians() {
+		return musicianService.getAllMusicians();
 	}
 }
