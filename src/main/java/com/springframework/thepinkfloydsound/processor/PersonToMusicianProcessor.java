@@ -8,7 +8,8 @@ import com.springframework.thepinkfloydsound.entity.Musician;
 import com.springframework.thepinkfloydsound.entity.Person;
 
 public class PersonToMusicianProcessor implements ItemProcessor<Person, Musician> {
-	private static final Logger log = LoggerFactory.getLogger(PersonToMusicianProcessor.class);
+	
+	public static final Logger log = LoggerFactory.getLogger(PersonToMusicianProcessor.class);
 
 	@Override
 	public Musician process(Person person) throws Exception {

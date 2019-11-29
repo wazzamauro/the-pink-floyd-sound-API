@@ -37,15 +37,19 @@ public class MusicianBatchConfiguration {
 
 	@Autowired
 	public DataSource dataSource;
+	
+	@Autowired
+	public MusicianWriter musicianWriter;
 
-	@Bean(destroyMethod="")
+	@Bean(destroyMethod = "")
 	public ItemReader<Person> readerPerson(DataSource dataSource) {
 		JdbcCursorItemReader<Person> cursorItemReader = new JdbcCursorItemReader<Person>();
 		cursorItemReader.setDataSource(dataSource);
-		cursorItemReader.setSql("SELECT first_name, last_name, age FROM people");
+		cursorItemReader.setSql("SELECT people_id, first_name, last_name, age FROM people LEFT OUTER JOIN musician ON people.people_id=musician.musician_id");
 		cursorItemReader.setRowMapper(new PersonRowMapper());
 		return cursorItemReader;
 	}
+	
 
 	public class PersonRowMapper implements RowMapper<Person> {
 		@Override
@@ -67,14 +71,19 @@ public class MusicianBatchConfiguration {
 	public JdbcBatchItemWriter<Musician> writerMusician(DataSource dataSource) {
 		return new JdbcBatchItemWriterBuilder<Musician>()
 				.itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
-				.sql("INSERT INTO musician (first_name, last_name, age, role) VALUES (:firstName, :lastName, :age, :role)")
+				.sql("INSERT INTO musician (musician_id, first_name, last_name, age, role) VALUES (:id, :firstName, :lastName, :age, :role)")
 				.dataSource(dataSource).build();
 	}
-
+	
 	@Bean
-	public Step stepMusician(JdbcBatchItemWriter<Musician> writerMusician) {
+	public MusicianWriter musicianWriter() {
+		return new MusicianWriter();
+		
+	}
+	@Bean
+	public Step stepMusician(MusicianWriter musicianWriter) {
 		return stepBuilderFactory.get("stepMusician").<Person, Musician>chunk(10).reader(readerPerson(dataSource))
-				.processor(processorMusician()).writer(writerMusician).build();
+				.processor(processorMusician()).writer(musicianWriter).build();
 	}
 	
 	@Bean

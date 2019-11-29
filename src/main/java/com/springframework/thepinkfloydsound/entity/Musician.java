@@ -2,20 +2,19 @@ package com.springframework.thepinkfloydsound.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "musician")
-@PrimaryKeyJoinColumn(name="people_id")
+@PrimaryKeyJoinColumn(name = "musician_id", referencedColumnName = "people_id")
 public class Musician extends Person {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
 	
 	@Column(name = "role", nullable = false)
 	private String role;
@@ -41,7 +40,7 @@ public class Musician extends Person {
 	}
 
 	public void inferRole() {
-		switch (firstName) {
+		switch (this.firstName) {
 		case "David":
 			setRole(Role.Guitar.toString());
 			break;

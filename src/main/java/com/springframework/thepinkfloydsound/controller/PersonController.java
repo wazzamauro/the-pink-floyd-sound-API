@@ -36,7 +36,7 @@ public class PersonController {
 	
 	@GetMapping("/get")
 	public List<Person> getPeople() {
-		Log.info("Retrieve People from db. . .");
+		Log.info("Retrieve People from DB. . .");
 		return personService.getAllPerson();
 	}
 }
