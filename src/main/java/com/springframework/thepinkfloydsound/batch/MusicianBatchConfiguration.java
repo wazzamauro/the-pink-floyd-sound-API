@@ -45,7 +45,7 @@ public class MusicianBatchConfiguration {
 	public ItemReader<Person> readerPerson(DataSource dataSource) {
 		JdbcCursorItemReader<Person> cursorItemReader = new JdbcCursorItemReader<Person>();
 		cursorItemReader.setDataSource(dataSource);
-		cursorItemReader.setSql("SELECT people_id, first_name, last_name, age FROM people LEFT OUTER JOIN musician ON people.people_id=musician.musician_id");
+		cursorItemReader.setSql("SELECT * FROM people LEFT JOIN musician ON people.people_id=musician.musician_id");
 		cursorItemReader.setRowMapper(new PersonRowMapper());
 		return cursorItemReader;
 	}

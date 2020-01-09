@@ -14,6 +14,7 @@ public class PersonToMusicianProcessor implements ItemProcessor<Person, Musician
 	@Override
 	public Musician process(Person person) throws Exception {
 		Musician musician = new Musician();
+		musician.setId(person.getId());
 		musician.setFirstName(person.getFirstName());
 		musician.setLastName(person.getLastName());
 		musician.setAge(person.getAge());
